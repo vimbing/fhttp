@@ -52,9 +52,9 @@ const (
 	SameSiteNoneMode
 )
 
-// ReadSetCookies parses all "Set-Cookie" Values from
+// readSetCookies parses all "Set-Cookie" Values from
 // the header h and returns the successfully parsed Cookies.
-func ReadSetCookies(h Header) []*Cookie {
+func readSetCookies(h Header) []*Cookie {
 	cookieCount := len(h["Set-Cookie"])
 	if cookieCount == 0 {
 		return []*Cookie{}
@@ -376,13 +376,8 @@ func sanitizeCookieValue(v string) string {
 	return v
 }
 
-// Disallows illegal characters in cookie value. Ignores illegal character `"`, some cookies have the " value
 func validCookieValueByte(b byte) bool {
-	return 0x20 <= b &&
-		b < 0x7f &&
-		// b != '"' &&
-		b != ';' &&
-		b != '\\'
+	return 0x20 <= b && b < 0x7f && b != '"' && b != ';' && b != '\\'
 }
 
 // path-av           = "Path=" path-value

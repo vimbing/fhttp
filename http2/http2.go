@@ -27,7 +27,7 @@ import (
 	"strings"
 	"sync"
 
-	http "github.com/useflyent/fhttp"
+	http "github.com/Carcraftz/fhttp"
 
 	"golang.org/x/net/http/httpguts"
 )

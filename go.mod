@@ -1,4 +1,4 @@
-module github.com/useflyent/fhttp
+module github.com/Carcraftz/fhttp
 
 go 1.16
 

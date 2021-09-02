@@ -24,8 +24,8 @@ import (
 	"testing"
 	"time"
 
-	http "github.com/useflyent/fhttp"
-	"github.com/useflyent/fhttp/httptest"
+	http "github.com/Carcraftz/fhttp"
+	"github.com/Carcraftz/fhttp/httptest"
 )
 
 const fakeHopHeader = "X-Fake-Hop-Header-For-Test"

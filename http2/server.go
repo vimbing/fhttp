@@ -46,8 +46,8 @@ import (
 	"sync"
 	"time"
 
-	http "github.com/useflyent/fhttp"
-	"github.com/useflyent/fhttp/http2/hpack"
+	http "github.com/Carcraftz/fhttp"
+	"github.com/Carcraftz/fhttp/http2/hpack"
 
 	"golang.org/x/net/http/httpguts"
 )

@@ -2,8 +2,8 @@ package http2
 
 import (
 	"bytes"
-	http "github.com/useflyent/fhttp"
-	"github.com/useflyent/fhttp/httptrace"
+	http "github.com/Carcraftz/fhttp"
+	"github.com/Carcraftz/fhttp/httptrace"
 	"log"
 	"strings"
 	"testing"

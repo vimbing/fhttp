@@ -17,6 +17,7 @@ The package allows for both pseudo header order and normal header order. Most of
 
 **Note on HTTP/1.1 header order**
 Although the header key is capitalized, the header order slice must be in lowercase.
+
 ```go
 	req.Header = http.Header{
 		"X-NewRelic-ID":         {"12345"},
@@ -113,6 +114,6 @@ SHOULD not break anything.
 
 Special thanks to the following people for helping me with this project.
 
-* [cc](https://github.com/x04/) for guiding me when I first started this project and inspiring me with [cclient](https://github.com/x04/cclient)
+- [cc](https://github.com/x04/) for guiding me when I first started this project and inspiring me with [cclient](https://github.com/x04/cclient)
 
-* [umasi](https://github.com/umasii) for being good rubber ducky and giving me tips for http2 headers
+- [umasi](https://github.com/umasii) for being good rubber ducky and giving me tips for http2 headers

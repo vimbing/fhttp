@@ -8,7 +8,7 @@ import (
 	"bufio"
 	"bytes"
 	"context"
-	"crypto/tls"
+	tls "github.com/Carcraftz/utls"
 	"crypto/x509"
 	"encoding/pem"
 	"errors"

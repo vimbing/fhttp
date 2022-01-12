@@ -28,7 +28,7 @@ import (
 	"bytes"
 	"context"
 	"crypto/rand"
-	"crypto/tls"
+	tls "github.com/Carcraftz/utls"
 	"encoding/binary"
 	"errors"
 	"fmt"

@@ -9,7 +9,7 @@ package http
 import (
 	"bufio"
 	"bytes"
-	"crypto/tls"
+	tls "github.com/Carcraftz/utls"
 	"errors"
 	"fmt"
 	"io"

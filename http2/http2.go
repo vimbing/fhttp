@@ -18,7 +18,7 @@ package http2
 
 import (
 	"bufio"
-	"crypto/tls"
+	tls "github.com/Carcraftz/utls"
 	"fmt"
 	"io"
 	"os"

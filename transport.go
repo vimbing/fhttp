@@ -14,7 +14,7 @@ import (
 
 	"container/list"
 	"context"
-	"crypto/tls"
+	tls "github.com/Carcraftz/utls"
 	"errors"
 	"fmt"
 	"io"

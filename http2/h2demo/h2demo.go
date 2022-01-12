@@ -7,7 +7,7 @@ package main
 import (
 	"bytes"
 	"context"
-	"crypto/tls"
+	tls "github.com/Carcraftz/utls"
 	"flag"
 	"fmt"
 	"hash/crc32"

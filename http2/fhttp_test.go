@@ -2,7 +2,7 @@ package http2_test
 
 import (
 	"bytes"
-	"crypto/tls"
+	tls "github.com/Carcraftz/utls"
 	"crypto/x509"
 	"errors"
 	"fmt"

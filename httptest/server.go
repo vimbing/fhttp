@@ -7,7 +7,7 @@
 package httptest
 
 import (
-	"crypto/tls"
+	tls "github.com/Carcraftz/utls"
 	"crypto/x509"
 	"flag"
 	"fmt"

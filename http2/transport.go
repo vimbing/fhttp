@@ -11,7 +11,7 @@ import (
 	"bytes"
 	"context"
 	"crypto/rand"
-	"crypto/tls"
+	tls "github.com/Carcraftz/utls"
 	"errors"
 	"fmt"
 	"io"

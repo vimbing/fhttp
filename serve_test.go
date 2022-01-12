@@ -12,7 +12,7 @@ import (
 	"compress/gzip"
 	"compress/zlib"
 	"context"
-	"crypto/tls"
+	tls "github.com/Carcraftz/utls"
 	"encoding/json"
 	"errors"
 	"fmt"

@@ -8,7 +8,7 @@ package httptrace
 
 import (
 	"context"
-	"crypto/tls"
+	tls "github.com/Carcraftz/utls"
 	"net"
 	"net/textproto"
 	"reflect"

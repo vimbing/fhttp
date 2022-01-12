@@ -22,7 +22,7 @@ package main
 import (
 	"bufio"
 	"bytes"
-	"crypto/tls"
+	tls "github.com/Carcraftz/utls"
 	"errors"
 	"flag"
 	"fmt"

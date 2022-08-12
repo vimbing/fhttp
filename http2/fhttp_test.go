@@ -2,13 +2,9 @@ package http2_test
 
 import (
 	"bytes"
-	tls "github.com/Carcraftz/utls"
 	"crypto/x509"
 	"errors"
 	"fmt"
-	"github.com/Carcraftz/fhttp/cookiejar"
-	"github.com/Carcraftz/fhttp/httptest"
-	"golang.org/x/net/publicsuffix"
 	"log"
 	ghttp "net/http"
 	"net/url"
@@ -16,8 +12,14 @@ import (
 	"strings"
 	"testing"
 
-	http "github.com/Carcraftz/fhttp"
-	"github.com/Carcraftz/fhttp/http2"
+	tls "github.com/Carcraftz/utls"
+
+	"github.com/vimbing/fhttp/cookiejar"
+	"github.com/vimbing/fhttp/httptest"
+	"golang.org/x/net/publicsuffix"
+
+	http "github.com/vimbing/fhttp"
+	"github.com/vimbing/fhttp/http2"
 )
 
 // Tests if connection settings are written correctly
@@ -200,36 +202,36 @@ func TestClient_Load(t *testing.T) {
 	}
 }
 
-func TestGClient_Load(t *testing.T) {
-	u, err := url.Parse("http://localhost:8888")
-	if err != nil {
-		t.Fatalf(err.Error())
-	}
+// func TestGClient_Load(t *testing.T) {
+// 	u, err := url.Parse("http://localhost:8888")
+// 	if err != nil {
+// 		t.Fatalf(err.Error())
+// 	}
 
-	pool, err := getCharlesCert()
-	if err != nil {
-		t.Fatalf(err.Error())
-	}
-	c := ghttp.Client{
-		Transport: &ghttp.Transport{
-			ForceAttemptHTTP2: true,
-			Proxy:             ghttp.ProxyURL(u),
-			TLSClientConfig: &tls.Config{
-				RootCAs: pool,
-			},
-		},
-	}
-	req, err := ghttp.NewRequest("GET", "https://golang.org/pkg/net/mail/#Address", nil)
-	if err != nil {
-		t.Fatalf(err.Error())
-	}
-	for i := 0; i < 10; i++ {
-		err := do(&c, req)
-		if err != nil {
-			t.Fatalf(err.Error())
-		}
-	}
-}
+// 	pool, err := getCharlesCert()
+// 	if err != nil {
+// 		t.Fatalf(err.Error())
+// 	}
+// 	c := ghttp.Client{
+// 		Transport: &ghttp.Transport{
+// 			ForceAttemptHTTP2: true,
+// 			Proxy:             ghttp.ProxyURL(u),
+// 			TLSClientConfig: &tls.Config{
+// 				RootCAs: pool,
+// 			},
+// 		},
+// 	}
+// 	req, err := ghttp.NewRequest("GET", "https://golang.org/pkg/net/mail/#Address", nil)
+// 	if err != nil {
+// 		t.Fatalf(err.Error())
+// 	}
+// 	for i := 0; i < 10; i++ {
+// 		err := do(&c, req)
+// 		if err != nil {
+// 			t.Fatalf(err.Error())
+// 		}
+// 	}
+// }
 
 func do(c *ghttp.Client, req *ghttp.Request) error {
 	resp, err := c.Do(req)

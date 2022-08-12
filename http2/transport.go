@@ -11,7 +11,6 @@ import (
 	"bytes"
 	"context"
 	"crypto/rand"
-	tls "github.com/Carcraftz/utls"
 	"errors"
 	"fmt"
 	"io"
@@ -27,6 +26,8 @@ import (
 	"sync"
 	"sync/atomic"
 	"time"
+
+	tls "github.com/Carcraftz/utls"
 
 	http "github.com/vimbing/fhttp"
 	"github.com/vimbing/fhttp/httptrace"
@@ -636,6 +637,7 @@ func (t *Transport) newTLSConfig(host string) *tls.Config {
 }
 
 func (t *Transport) dialTLS() func(string, string, *tls.Config) (net.Conn, error) {
+
 	if t.DialTLS != nil {
 		return t.DialTLS
 	}
@@ -650,6 +652,7 @@ func (t *Transport) dialTLSDefault(network, addr string, cfg *tls.Config) (net.C
 	if err := cn.Handshake(); err != nil {
 		return nil, err
 	}
+
 	if !cfg.InsecureSkipVerify {
 		if err := cn.VerifyHostname(cfg.ServerName); err != nil {
 			return nil, err
@@ -736,41 +739,60 @@ func (t *Transport) newClientConn(c net.Conn, addr string, singleUse bool) (*Cli
 
 	initialSettings := []Setting{}
 
-	var pushEnabled uint32
-	if t.PushHandler != nil {
-		pushEnabled = 1
-	}
-	initialSettings = append(initialSettings, Setting{ID: SettingEnablePush, Val: pushEnabled})
-
 	setMaxHeader := false
-	if t.Settings != nil {
-		for _, setting := range t.Settings {
-			if setting.ID == SettingMaxHeaderListSize {
-				setMaxHeader = true
-			}
-			if setting.ID == SettingHeaderTableSize || setting.ID == SettingInitialWindowSize {
-				return nil, errSettingsIncludeIllegalSettings
-			}
-			initialSettings = append(initialSettings, setting)
-		}
-	}
-	if t.InitialWindowSize != 0 {
-		initialSettings = append(initialSettings, Setting{ID: SettingInitialWindowSize, Val: t.InitialWindowSize})
-	} else {
-		initialSettings = append(initialSettings, Setting{ID: SettingInitialWindowSize, Val: transportDefaultStreamFlow})
-	}
 	if t.HeaderTableSize != 0 {
 		initialSettings = append(initialSettings, Setting{ID: SettingHeaderTableSize, Val: t.HeaderTableSize})
 	} else {
 		initialSettings = append(initialSettings, Setting{ID: SettingHeaderTableSize, Val: initialHeaderTableSize})
 	}
+
+	initialSettings = append(initialSettings, Setting{ID: SettingEnablePush, Val: 1})
+
+	if t.Settings != nil {
+		for _, setting := range t.Settings {
+			if setting.ID == SettingHeaderTableSize || setting.ID == SettingInitialWindowSize {
+				return nil, errSettingsIncludeIllegalSettings
+			}
+
+			if setting.ID == SettingMaxHeaderListSize {
+				setMaxHeader = true
+			}
+
+			initialSettings = append(initialSettings, setting)
+		}
+	}
+
+	if t.InitialWindowSize != 0 {
+		initialSettings = append(initialSettings, Setting{ID: SettingInitialWindowSize, Val: t.InitialWindowSize})
+	} else {
+		initialSettings = append(initialSettings, Setting{ID: SettingInitialWindowSize, Val: transportDefaultStreamFlow})
+	}
+
 	if max := t.maxHeaderListSize(); max != 0 && !setMaxHeader {
 		initialSettings = append(initialSettings, Setting{ID: SettingMaxHeaderListSize, Val: max})
 	}
 
+	initialSettings = append(initialSettings, Setting{ID: SettingMaxFrameSize, Val: 16384})
+
+	header_table_size := initialSettings[0]
+	enable_push := initialSettings[1]
+	max_concurrent_streams := initialSettings[2]
+	max_header_list_size := initialSettings[3]
+	initial_window_size := initialSettings[4]
+	settingMaxFrameSize := initialSettings[5]
+
+	initialSettings[0] = enable_push
+	initialSettings[1] = max_concurrent_streams
+	initialSettings[2] = settingMaxFrameSize
+	initialSettings[3] = max_header_list_size
+	initialSettings[4] = initial_window_size
+	initialSettings[5] = header_table_size
+
+	initialSettings = []Setting{header_table_size, max_concurrent_streams, initial_window_size, max_header_list_size}
+
 	cc.bw.Write(clientPreface)
 	cc.fr.WriteSettings(initialSettings...)
-	cc.fr.WriteWindowUpdate(0, transportDefaultConnFlow)
+	cc.fr.WriteWindowUpdate(0, 1073741824)
 	cc.inflow.add(transportDefaultConnFlow + initialWindowSize)
 	cc.bw.Flush()
 	if cc.werr != nil {
@@ -2682,6 +2704,7 @@ func (rl *clientConnReadLoop) processPushPromise(f *MetaPushPromiseFrame) error 
 		}
 
 		var authoritative bool
+
 		if rl.cc.tlsState != nil {
 			authoritative = len(rl.cc.tlsState.VerifiedChains) > 0 &&
 				rl.cc.tlsState.PeerCertificates[0].VerifyHostname(pushedReq.URL.Hostname()) == nil
@@ -2689,6 +2712,7 @@ func (rl *clientConnReadLoop) processPushPromise(f *MetaPushPromiseFrame) error 
 			// Non-TLS connection
 			authoritative = pushHost == origHost
 		}
+
 		if !authoritative {
 			err := fmt.Errorf("server not authoritative for push with host %q", pushedReq.URL.Hostname())
 			return StreamError{f.StreamID, ErrCodeProtocol, err}

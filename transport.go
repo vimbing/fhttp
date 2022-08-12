@@ -14,7 +14,6 @@ import (
 
 	"container/list"
 	"context"
-	tls "github.com/Carcraftz/utls"
 	"errors"
 	"fmt"
 	"io"
@@ -28,6 +27,8 @@ import (
 	"sync"
 	"sync/atomic"
 	"time"
+
+	tls "github.com/Carcraftz/utls"
 
 	"github.com/vimbing/fhttp/httptrace"
 

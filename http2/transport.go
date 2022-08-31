@@ -2343,7 +2343,7 @@ func (b transportResponseBody) Close() error {
 		// Return connection-level flow control.
 		if unread > 0 {
 			cc.inflow.add(int32(unread))
-			cc.fr.WriteWindowUpdate(0, uint32(unread))
+			cc.fr.WriteWindowUpdate(0, uint32(15663105))
 		}
 		cc.bw.Flush()
 		cc.wmu.Unlock()

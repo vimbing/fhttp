@@ -1356,6 +1356,11 @@ func (cc *ClientConn) writeHeaders(streamID uint32, endStream bool, maxFrameSize
 				BlockFragment: chunk,
 				EndStream:     endStream,
 				EndHeaders:    endHeaders,
+				Priority: PriorityParam{
+					Weight:    255,
+					StreamDep: 0,
+					Exclusive: true,
+				},
 			})
 			first = false
 		} else {

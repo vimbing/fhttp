@@ -792,7 +792,7 @@ func (t *Transport) newClientConn(c net.Conn, addr string, singleUse bool) (*Cli
 
 	cc.bw.Write(clientPreface)
 	cc.fr.WriteSettings(initialSettings...)
-	cc.fr.WriteWindowUpdate(0, 1073741824)
+	cc.fr.WriteWindowUpdate(0, 15663105)
 	cc.inflow.add(transportDefaultConnFlow + initialWindowSize)
 	cc.bw.Flush()
 	if cc.werr != nil {
@@ -2343,7 +2343,7 @@ func (b transportResponseBody) Close() error {
 		// Return connection-level flow control.
 		if unread > 0 {
 			cc.inflow.add(int32(unread))
-			cc.fr.WriteWindowUpdate(0, uint32(15663105))
+			cc.fr.WriteWindowUpdate(0, uint32(unread))
 		}
 		cc.bw.Flush()
 		cc.wmu.Unlock()

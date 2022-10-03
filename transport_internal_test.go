@@ -8,7 +8,7 @@ package http
 
 // import (
 // 	"bytes"
-// 	tls "github.com/Carcraftz/utls"
+// 	tls "github.com/vimbing/utls"
 // 	"errors"
 // 	"fmt"
 // 	"io"

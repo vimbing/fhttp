@@ -8,7 +8,7 @@ package httptest
 import (
 	"bufio"
 	"bytes"
-	tls "github.com/Carcraftz/utls"
+	tls "github.com/vimbing/utls"
 	"io"
 	"strings"
 

@@ -7,7 +7,7 @@ package main
 import (
 	"bytes"
 	"context"
-	tls "github.com/Carcraftz/utls"
+	tls "github.com/vimbing/utls"
 	"flag"
 	"fmt"
 	"hash/crc32"

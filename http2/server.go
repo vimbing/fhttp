@@ -29,7 +29,7 @@ import (
 	"bufio"
 	"bytes"
 	"context"
-	tls "github.com/Carcraftz/utls"
+	tls "github.com/vimbing/utls"
 	"errors"
 	"fmt"
 	"io"

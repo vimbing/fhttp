@@ -5,7 +5,7 @@
 package httptest
 
 import (
-	tls "github.com/Carcraftz/utls"
+	tls "github.com/vimbing/utls"
 	"io"
 	"net/url"
 	"reflect"

@@ -10,7 +10,7 @@ import (
 	"bufio"
 	"bytes"
 	"context"
-	tls "github.com/Carcraftz/utls"
+	tls "github.com/vimbing/utls"
 	"encoding/base64"
 	"errors"
 	"fmt"

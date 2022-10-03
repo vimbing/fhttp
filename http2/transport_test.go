@@ -31,7 +31,7 @@ package http2
 // 	"testing"
 // 	"time"
 
-// 	tls "github.com/Carcraftz/utls"
+// 	tls "github.com/vimbing/utls"
 
 // 	http "github.com/vimbing/fhttp"
 // 	"github.com/vimbing/fhttp/http2/hpack"

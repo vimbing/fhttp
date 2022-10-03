@@ -27,7 +27,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	tls "github.com/Carcraftz/utls"
+	tls "github.com/vimbing/utls"
 
 	http "github.com/vimbing/fhttp"
 	"github.com/vimbing/fhttp/httptrace"

@@ -11,7 +11,7 @@ import (
 	"compress/gzip"
 	"crypto/rand"
 	"crypto/sha1"
-	tls "github.com/Carcraftz/utls"
+	tls "github.com/vimbing/utls"
 	"fmt"
 	"hash"
 	"io"

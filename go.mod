@@ -3,7 +3,7 @@ module github.com/vimbing/fhttp
 go 1.18
 
 require (
-	github.com/Carcraftz/utls v0.0.0-20220413235215-6b7c52fd78b6
+	github.com/vimbing/utls v0.0.0-20221003221406-2f6094b8625d
 	golang.org/x/net v0.0.0-20220812165438-1d4ff48094d1
 	golang.org/x/term v0.0.0-20220722155259-a9ba230a4035
 )

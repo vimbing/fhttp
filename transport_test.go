@@ -15,7 +15,7 @@ import (
 	"compress/gzip"
 	"context"
 	"crypto/rand"
-	tls "github.com/Carcraftz/utls"
+	tls "github.com/vimbing/utls"
 	"crypto/x509"
 	"encoding/binary"
 	"errors"

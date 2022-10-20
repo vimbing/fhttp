@@ -746,7 +746,7 @@ func (t *Transport) newClientConn(c net.Conn, addr string, singleUse bool) (*Cli
 		initialSettings = append(initialSettings, Setting{ID: SettingHeaderTableSize, Val: initialHeaderTableSize})
 	}
 
-	initialSettings = append(initialSettings, Setting{ID: SettingEnablePush, Val: 1})
+	initialSettings = append(initialSettings, Setting{ID: SettingEnablePush, Val: 0})
 
 	if t.Settings != nil {
 		for _, setting := range t.Settings {
@@ -788,7 +788,7 @@ func (t *Transport) newClientConn(c net.Conn, addr string, singleUse bool) (*Cli
 	initialSettings[4] = initial_window_size
 	initialSettings[5] = header_table_size
 
-	initialSettings = []Setting{header_table_size, max_concurrent_streams, initial_window_size, max_header_list_size}
+	initialSettings = []Setting{header_table_size, enable_push, max_concurrent_streams, initial_window_size, max_header_list_size}
 
 	cc.bw.Write(clientPreface)
 	cc.fr.WriteSettings(initialSettings...)

@@ -12,7 +12,7 @@ import (
 	"strings"
 	"testing"
 
-	tls "github.com/vimbing/utls"
+	tls "github.com/vimbing/vutls"
 
 	"github.com/vimbing/fhttp/cookiejar"
 	"github.com/vimbing/fhttp/httptest"

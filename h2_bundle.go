@@ -28,7 +28,7 @@ import (
 	"bytes"
 	"context"
 	"crypto/rand"
-	tls "github.com/vimbing/utls"
+	tls "github.com/vimbing/vutls"
 	"encoding/binary"
 	"errors"
 	"fmt"

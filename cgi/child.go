@@ -9,7 +9,6 @@ package cgi
 
 import (
 	"bufio"
-	tls "github.com/vimbing/utls"
 	"errors"
 	"fmt"
 	"io"
@@ -18,6 +17,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	tls "github.com/vimbing/vutls"
 
 	http "github.com/vimbing/fhttp"
 )

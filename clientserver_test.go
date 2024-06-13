@@ -11,7 +11,6 @@ import (
 	"compress/gzip"
 	"crypto/rand"
 	"crypto/sha1"
-	tls "github.com/vimbing/utls"
 	"fmt"
 	"hash"
 	"io"
@@ -27,6 +26,8 @@ import (
 	"sync/atomic"
 	"testing"
 	"time"
+
+	tls "github.com/vimbing/vutls"
 
 	. "github.com/vimbing/fhttp"
 	"github.com/vimbing/fhttp/httptest"

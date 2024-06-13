@@ -9,7 +9,6 @@ package http_test
 import (
 	"bytes"
 	"context"
-	tls "github.com/vimbing/utls"
 	"encoding/base64"
 	"errors"
 	"fmt"
@@ -24,6 +23,8 @@ import (
 	"sync/atomic"
 	"testing"
 	"time"
+
+	tls "github.com/vimbing/vutls"
 
 	. "github.com/vimbing/fhttp"
 	"github.com/vimbing/fhttp/cookiejar"

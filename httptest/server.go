@@ -7,7 +7,6 @@
 package httptest
 
 import (
-	tls "github.com/vimbing/utls"
 	"crypto/x509"
 	"flag"
 	"fmt"
@@ -17,6 +16,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	tls "github.com/vimbing/vutls"
 
 	http "github.com/vimbing/fhttp"
 	"github.com/vimbing/fhttp/internal"
@@ -77,7 +78,9 @@ func newLocalListener() net.Listener {
 
 // When debugging a particular http server-based test,
 // this flag lets you run
+//
 //	go test -run=BrokenTest -httptest.serve=127.0.0.1:8000
+//
 // to start the broken server so you can interact with it manually.
 // We only register this flag if it looks like the caller knows about it
 // and is trying to use it as we don't want to pollute flags and this

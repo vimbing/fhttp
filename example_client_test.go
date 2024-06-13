@@ -1,7 +1,6 @@
 package http_test
 
 import (
-	tls "github.com/vimbing/utls"
 	"crypto/x509"
 	"encoding/json"
 	"flag"
@@ -11,6 +10,8 @@ import (
 	"os"
 	"strings"
 	"testing"
+
+	tls "github.com/vimbing/vutls"
 
 	http "github.com/vimbing/fhttp"
 	"github.com/vimbing/fhttp/http2"

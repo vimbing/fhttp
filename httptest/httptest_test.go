@@ -5,12 +5,13 @@
 package httptest
 
 import (
-	tls "github.com/vimbing/utls"
 	"io"
 	"net/url"
 	"reflect"
 	"strings"
 	"testing"
+
+	tls "github.com/vimbing/vutls"
 
 	http "github.com/vimbing/fhttp"
 )

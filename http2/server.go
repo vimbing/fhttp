@@ -29,7 +29,6 @@ import (
 	"bufio"
 	"bytes"
 	"context"
-	tls "github.com/vimbing/utls"
 	"errors"
 	"fmt"
 	"io"
@@ -45,6 +44,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	tls "github.com/vimbing/vutls"
 
 	http "github.com/vimbing/fhttp"
 	"github.com/vimbing/fhttp/http2/hpack"
@@ -2515,8 +2516,9 @@ func (rws *responseWriterState) writeChunk(p []byte) (n int, err error) {
 // prior to the headers being written. If the set of trailers is fixed
 // or known before the header is written, the normal Go trailers mechanism
 // is preferred:
-//    https://golang.org/pkg/net/http/#ResponseWriter
-//    https://golang.org/pkg/net/http/#example_ResponseWriter_trailers
+//
+//	https://golang.org/pkg/net/http/#ResponseWriter
+//	https://golang.org/pkg/net/http/#example_ResponseWriter_trailers
 const TrailerPrefix = "Trailer:"
 
 // promoteUndeclaredTrailers permits http.Handlers to set trailers

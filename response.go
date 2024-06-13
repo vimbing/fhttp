@@ -17,7 +17,7 @@ import (
 	"strconv"
 	"strings"
 
-	tls "github.com/vimbing/utls"
+	tls "github.com/vimbing/vutls"
 
 	"golang.org/x/net/http/httpguts"
 )

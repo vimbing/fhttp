@@ -8,9 +8,10 @@ package httptest
 import (
 	"bufio"
 	"bytes"
-	tls "github.com/vimbing/utls"
 	"io"
 	"strings"
+
+	tls "github.com/vimbing/vutls"
 
 	http "github.com/vimbing/fhttp"
 )

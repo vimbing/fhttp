@@ -7,12 +7,13 @@ package http_test
 import (
 	"bufio"
 	"bytes"
-	tls "github.com/vimbing/utls"
 	"crypto/x509"
 	"fmt"
 	"io"
 	"strings"
 	"testing"
+
+	tls "github.com/vimbing/vutls"
 
 	. "github.com/vimbing/fhttp"
 	"github.com/vimbing/fhttp/httptest"

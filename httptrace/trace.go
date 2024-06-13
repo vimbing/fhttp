@@ -13,7 +13,7 @@ import (
 	"reflect"
 	"time"
 
-	tls "github.com/vimbing/utls"
+	tls "github.com/vimbing/vutls"
 
 	"github.com/vimbing/fhttp/internal/nettrace"
 )

@@ -788,7 +788,7 @@ func (t *Transport) newClientConn(c net.Conn, addr string, singleUse bool) (*Cli
 	initialSettings[4] = initial_window_size
 	initialSettings[5] = header_table_size
 
-	initialSettings = []Setting{header_table_size, enable_push, max_concurrent_streams, initial_window_size, max_header_list_size}
+	initialSettings = []Setting{header_table_size, enable_push, initial_window_size, max_header_list_size}
 
 	cc.bw.Write(clientPreface)
 	cc.fr.WriteSettings(initialSettings...)

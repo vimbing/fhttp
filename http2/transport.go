@@ -688,6 +688,85 @@ func (t *Transport) NewClientConn(c net.Conn) (*ClientConn, error) {
 	return t.newClientConn(c, "", t.disableKeepAlives())
 }
 
+func lenSyncMap(m *sync.Map) int {
+	var i int
+	m.Range(func(k, v interface{}) bool {
+		i++
+		return true
+	})
+	return i
+}
+
+func syncMapLoad[T any](m *sync.Map, k any) (T, bool) {
+	result, ok := m.Load(k)
+	return result.(T), ok
+}
+
+func (t *Transport) findSettings(lookingFor *sync.Map) *sync.Map {
+	found := &sync.Map{}
+
+	for _, setting := range t.Settings {
+		if _, ok := lookingFor.Load(setting.ID); ok {
+			found.Store(setting.ID, setting)
+		}
+	}
+
+	return found
+}
+
+func (t *Transport) headerTableAndInitialWindow() (Setting, Setting, error) {
+	lookingFor := &sync.Map{}
+
+	lookingFor.Store(SettingHeaderTableSize, true)
+	lookingFor.Store(SettingInitialWindowSize, true)
+	lookingFor.Store(SettingMaxHeaderListSize, true)
+
+	found := t.findSettings(lookingFor)
+
+	headerTableSize, ok := syncMapLoad[Setting](found, SettingHeaderTableSize)
+
+	if !ok {
+		headerTableSize = Setting{
+			ID:  SettingHeaderTableSize,
+			Val: initialHeaderTableSize,
+		}
+
+		t.Settings = append(t.Settings, headerTableSize)
+	}
+
+	t.HeaderTableSize = headerTableSize.Val
+
+	initialWindowSize, ok := syncMapLoad[Setting](found, SettingInitialWindowSize)
+
+	if !ok {
+		initialWindowSize = Setting{
+			ID:  SettingInitialWindowSize,
+			Val: transportDefaultStreamFlow,
+		}
+
+		t.Settings = append(t.Settings, initialWindowSize)
+	}
+
+	t.InitialWindowSize = initialWindowSize.Val
+
+	// maxHeaderListSize, ok := syncMapLoad[Setting](found, SettingMaxHeaderListSize)
+
+	// if !ok {
+	// 	if max := t.maxHeaderListSize(); max != 0 {
+	// 		maxHeaderListSize = Setting{
+	// 			ID:  SettingMaxHeaderListSize,
+	// 			Val: transportDefaultStreamFlow,
+	// 		}
+
+	// 		t.Settings = append(t.Settings, initialWindowSize)
+	// 	}
+	// }
+
+	// t.InitialWindowSize = initialWindowSize.Val
+
+	return headerTableSize, initialWindowSize, nil
+}
+
 func (t *Transport) newClientConn(c net.Conn, addr string, singleUse bool) (*ClientConn, error) {
 	cc := &ClientConn{
 		t:                     t,
@@ -715,11 +794,14 @@ func (t *Transport) newClientConn(c net.Conn, addr string, singleUse bool) (*Cli
 	cc.cond = sync.NewCond(&cc.mu)
 	cc.flow.add(int32(initialWindowSize))
 
+	t.headerTableAndInitialWindow()
+
 	// TODO: adjust this writer size to account for frame size +
 	// MTU + crypto/tls record padding.
 	cc.bw = bufio.NewWriter(stickyErrWriter{c, &cc.werr})
 	cc.br = bufio.NewReader(c)
 	cc.fr = NewFramer(cc.bw, cc.br)
+
 	if t.HeaderTableSize != 0 {
 		cc.fr.ReadMetaHeaders = hpack.NewDecoder(t.HeaderTableSize, nil)
 	} else {
@@ -756,23 +838,15 @@ func (t *Transport) newClientConn(c net.Conn, addr string, singleUse bool) (*Cli
 			if setting.ID == SettingMaxHeaderListSize {
 				setMaxHeader = true
 			}
-			if setting.ID == SettingHeaderTableSize || setting.ID == SettingInitialWindowSize {
-				return nil, errSettingsIncludeIllegalSettings
-			}
+
+			// if setting.ID == SettingHeaderTableSize || setting.ID == SettingInitialWindowSize {
+			// 	return nil, errSettingsIncludeIllegalSettings
+			// }
+
 			initialSettings = append(initialSettings, setting)
 		}
 	}
 
-	if t.InitialWindowSize != 0 {
-		initialSettings = append(initialSettings, Setting{ID: SettingInitialWindowSize, Val: t.InitialWindowSize})
-	} else {
-		initialSettings = append(initialSettings, Setting{ID: SettingInitialWindowSize, Val: transportDefaultStreamFlow})
-	}
-	if t.HeaderTableSize != 0 {
-		initialSettings = append(initialSettings, Setting{ID: SettingHeaderTableSize, Val: t.HeaderTableSize})
-	} else {
-		initialSettings = append(initialSettings, Setting{ID: SettingHeaderTableSize, Val: initialHeaderTableSize})
-	}
 	if max := t.maxHeaderListSize(); max != 0 && !setMaxHeader {
 		initialSettings = append(initialSettings, Setting{ID: SettingMaxHeaderListSize, Val: max})
 	}

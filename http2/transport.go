@@ -829,7 +829,9 @@ func (t *Transport) newClientConn(c net.Conn, addr string, singleUse bool) (*Cli
 		pushEnabled = 1
 	}
 
-	initialSettings = append(initialSettings, Setting{ID: SettingEnablePush, Val: pushEnabled})
+	if pushEnabled == 1 {
+		initialSettings = append(initialSettings, Setting{ID: SettingEnablePush, Val: pushEnabled})
+	}
 
 	setMaxHeader := false
 

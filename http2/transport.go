@@ -697,10 +697,10 @@ func lenSyncMap(m *sync.Map) int {
 	return i
 }
 
-func syncMapLoad[T any](m *sync.Map, k any) (T, bool) {
-	result, ok := m.Load(k)
-	return result.(T), ok
-}
+// func syncMapLoad[T any](m *sync.Map, k any) (T, bool) {
+// 	result, ok := m.Load(k)
+// 	return result.(T), ok
+// }
 
 func (t *Transport) findSettings(lookingFor *sync.Map) *sync.Map {
 	found := &sync.Map{}
@@ -723,7 +723,7 @@ func (t *Transport) headerTableAndInitialWindow() (Setting, Setting, error) {
 
 	found := t.findSettings(lookingFor)
 
-	headerTableSize, ok := syncMapLoad[Setting](found, SettingHeaderTableSize)
+	headerTableSize, ok := found.Load(SettingHeaderTableSize)
 
 	if !ok {
 		headerTableSize = Setting{
@@ -731,12 +731,12 @@ func (t *Transport) headerTableAndInitialWindow() (Setting, Setting, error) {
 			Val: initialHeaderTableSize,
 		}
 
-		t.Settings = append(t.Settings, headerTableSize)
+		t.Settings = append(t.Settings, headerTableSize.(Setting))
 	}
 
-	t.HeaderTableSize = headerTableSize.Val
+	t.HeaderTableSize = headerTableSize.(Setting).Val
 
-	initialWindowSize, ok := syncMapLoad[Setting](found, SettingInitialWindowSize)
+	initialWindowSize, ok := found.Load(SettingInitialWindowSize)
 
 	if !ok {
 		initialWindowSize = Setting{
@@ -744,10 +744,10 @@ func (t *Transport) headerTableAndInitialWindow() (Setting, Setting, error) {
 			Val: transportDefaultStreamFlow,
 		}
 
-		t.Settings = append(t.Settings, initialWindowSize)
+		t.Settings = append(t.Settings, initialWindowSize.(Setting))
 	}
 
-	t.InitialWindowSize = initialWindowSize.Val
+	t.InitialWindowSize = initialWindowSize.(Setting).Val
 
 	// maxHeaderListSize, ok := syncMapLoad[Setting](found, SettingMaxHeaderListSize)
 
@@ -764,7 +764,7 @@ func (t *Transport) headerTableAndInitialWindow() (Setting, Setting, error) {
 
 	// t.InitialWindowSize = initialWindowSize.Val
 
-	return headerTableSize, initialWindowSize, nil
+	return headerTableSize.(Setting), initialWindowSize.(Setting), nil
 }
 
 func (t *Transport) newClientConn(c net.Conn, addr string, singleUse bool) (*ClientConn, error) {

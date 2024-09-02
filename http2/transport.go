@@ -148,6 +148,9 @@ type Transport struct {
 	Settings          []Setting
 	InitialWindowSize uint32 // if nil, will use global initialWindowSize
 	HeaderTableSize   uint32 // if nil, will use global initialHeaderTableSize
+
+	Http2Settings      map[SettingID]uint32
+	Http2SettingsOrder []SettingID
 }
 
 func (t *Transport) maxHeaderListSize() uint32 {
@@ -774,21 +777,32 @@ func (t *Transport) newClientConn(c net.Conn, addr string, singleUse bool) (*Cli
 
 	initialSettings = append(initialSettings, Setting{ID: SettingMaxFrameSize, Val: 16384})
 
-	header_table_size := initialSettings[0]
-	enable_push := initialSettings[1]
-	max_concurrent_streams := initialSettings[2]
-	max_header_list_size := initialSettings[3]
-	initial_window_size := initialSettings[4]
-	settingMaxFrameSize := initialSettings[5]
+	if len(t.Http2SettingsOrder) == 0 || len(t.Http2Settings) == 0 {
+		header_table_size := initialSettings[0]
+		enable_push := initialSettings[1]
+		max_concurrent_streams := initialSettings[2]
+		max_header_list_size := initialSettings[3]
+		initial_window_size := initialSettings[4]
+		settingMaxFrameSize := initialSettings[5]
 
-	initialSettings[0] = enable_push
-	initialSettings[1] = max_concurrent_streams
-	initialSettings[2] = settingMaxFrameSize
-	initialSettings[3] = max_header_list_size
-	initialSettings[4] = initial_window_size
-	initialSettings[5] = header_table_size
+		initialSettings[0] = enable_push
+		initialSettings[1] = max_concurrent_streams
+		initialSettings[2] = settingMaxFrameSize
+		initialSettings[3] = max_header_list_size
+		initialSettings[4] = initial_window_size
+		initialSettings[5] = header_table_size
 
-	initialSettings = []Setting{header_table_size, enable_push, initial_window_size, max_header_list_size}
+		initialSettings = []Setting{header_table_size, enable_push, initial_window_size, max_header_list_size}
+	} else {
+		initialSettings = []Setting{}
+
+		for _, settingId := range t.Http2SettingsOrder {
+			initialSettings = append(initialSettings, Setting{
+				ID:  settingId,
+				Val: t.Http2Settings[settingId],
+			})
+		}
+	}
 
 	cc.bw.Write(clientPreface)
 	cc.fr.WriteSettings(initialSettings...)

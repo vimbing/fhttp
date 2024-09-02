@@ -742,25 +742,23 @@ func (t *Transport) newClientConn(c net.Conn, addr string, singleUse bool) (*Cli
 
 	initialSettings := []Setting{}
 
-	setMaxHeader := false
-	if t.HeaderTableSize != 0 {
-		initialSettings = append(initialSettings, Setting{ID: SettingHeaderTableSize, Val: t.HeaderTableSize})
-	} else {
-		initialSettings = append(initialSettings, Setting{ID: SettingHeaderTableSize, Val: initialHeaderTableSize})
+	var pushEnabled uint32
+	if t.PushHandler != nil {
+		pushEnabled = 1
 	}
 
-	initialSettings = append(initialSettings, Setting{ID: SettingEnablePush, Val: 0})
+	initialSettings = append(initialSettings, Setting{ID: SettingEnablePush, Val: pushEnabled})
+
+	setMaxHeader := false
 
 	if t.Settings != nil {
 		for _, setting := range t.Settings {
-			if setting.ID == SettingHeaderTableSize || setting.ID == SettingInitialWindowSize {
-				return nil, errSettingsIncludeIllegalSettings
-			}
-
 			if setting.ID == SettingMaxHeaderListSize {
 				setMaxHeader = true
 			}
-
+			if setting.ID == SettingHeaderTableSize || setting.ID == SettingInitialWindowSize {
+				return nil, errSettingsIncludeIllegalSettings
+			}
 			initialSettings = append(initialSettings, setting)
 		}
 	}
@@ -770,38 +768,13 @@ func (t *Transport) newClientConn(c net.Conn, addr string, singleUse bool) (*Cli
 	} else {
 		initialSettings = append(initialSettings, Setting{ID: SettingInitialWindowSize, Val: transportDefaultStreamFlow})
 	}
-
+	if t.HeaderTableSize != 0 {
+		initialSettings = append(initialSettings, Setting{ID: SettingHeaderTableSize, Val: t.HeaderTableSize})
+	} else {
+		initialSettings = append(initialSettings, Setting{ID: SettingHeaderTableSize, Val: initialHeaderTableSize})
+	}
 	if max := t.maxHeaderListSize(); max != 0 && !setMaxHeader {
 		initialSettings = append(initialSettings, Setting{ID: SettingMaxHeaderListSize, Val: max})
-	}
-
-	initialSettings = append(initialSettings, Setting{ID: SettingMaxFrameSize, Val: 16384})
-
-	if len(t.Http2SettingsOrder) == 0 || len(t.Http2Settings) == 0 {
-		header_table_size := initialSettings[0]
-		enable_push := initialSettings[1]
-		max_concurrent_streams := initialSettings[2]
-		max_header_list_size := initialSettings[3]
-		initial_window_size := initialSettings[4]
-		settingMaxFrameSize := initialSettings[5]
-
-		initialSettings[0] = enable_push
-		initialSettings[1] = max_concurrent_streams
-		initialSettings[2] = settingMaxFrameSize
-		initialSettings[3] = max_header_list_size
-		initialSettings[4] = initial_window_size
-		initialSettings[5] = header_table_size
-
-		initialSettings = []Setting{header_table_size, enable_push, initial_window_size, max_header_list_size}
-	} else {
-		initialSettings = []Setting{}
-
-		for _, settingId := range t.Http2SettingsOrder {
-			initialSettings = append(initialSettings, Setting{
-				ID:  settingId,
-				Val: t.Http2Settings[settingId],
-			})
-		}
 	}
 
 	cc.bw.Write(clientPreface)

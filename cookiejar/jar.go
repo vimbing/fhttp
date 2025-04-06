@@ -19,9 +19,9 @@ import (
 )
 
 // PublicSuffixList provides the public suffix of a domain. For example:
-//      - the public suffix of "example.com" is "com",
-//      - the public suffix of "foo1.foo2.foo3.co.uk" is "co.uk", and
-//      - the public suffix of "bar.pvt.k12.ma.us" is "pvt.k12.ma.us".
+//   - the public suffix of "example.com" is "com",
+//   - the public suffix of "foo1.foo2.foo3.co.uk" is "co.uk", and
+//   - the public suffix of "bar.pvt.k12.ma.us" is "pvt.k12.ma.us".
 //
 // Implementations of PublicSuffixList must be safe for concurrent use by
 // multiple goroutines.
@@ -154,6 +154,33 @@ func hasDotSuffix(s, suffix string) bool {
 // It returns an empty slice if the URL's scheme is not HTTP or HTTPS.
 func (j *Jar) Cookies(u *url.URL) (cookies []*http.Cookie) {
 	return j.cookies(u, time.Now())
+}
+
+func (j *Jar) DeleteCookie(u *url.URL, name string) error {
+	host, err := canonicalHost(u.Host)
+
+	if err != nil {
+		return err
+	}
+
+	key := jarKey(host, j.psList)
+
+	j.mu.Lock()
+	defer j.mu.Unlock()
+
+	submap := j.entries[key]
+
+	if submap == nil {
+		return errors.New("no cookies")
+	}
+
+	for id, e := range submap {
+		if e.Name == name {
+			delete(submap, id)
+		}
+	}
+
+	return nil
 }
 
 // cookies is like Cookies but takes the current time as a parameter.

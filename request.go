@@ -24,7 +24,7 @@ import (
 	"strings"
 	"sync"
 
-	tls "github.com/vimbing/vutls"
+	tls "github.com/vimbing/utls"
 
 	"github.com/vimbing/fhttp/httptrace"
 

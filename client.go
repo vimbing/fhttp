@@ -23,7 +23,7 @@ import (
 	"sync"
 	"time"
 
-	tls "github.com/vimbing/vutls"
+	tls "github.com/vimbing/utls"
 )
 
 // A Client is an HTTP client. Its zero value (DefaultClient) is a

@@ -36,7 +36,7 @@ import (
 	"strconv"
 	"strings"
 
-	tls "github.com/vimbing/vutls"
+	tls "github.com/vimbing/utls"
 
 	"github.com/vimbing/fhttp/http2"
 	"github.com/vimbing/fhttp/http2/hpack"

@@ -25,7 +25,7 @@ import (
 	"sync"
 	"time"
 
-	tls "github.com/vimbing/vutls"
+	tls "github.com/vimbing/utls"
 
 	"cloud.google.com/go/storage"
 	"github.com/vimbing/fhttp/http2"

@@ -9,7 +9,7 @@ package http2
 import (
 	"sync"
 
-	tls "github.com/vimbing/vutls"
+	tls "github.com/vimbing/utls"
 
 	http "github.com/vimbing/fhttp"
 )

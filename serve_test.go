@@ -35,7 +35,7 @@ import (
 	"testing"
 	"time"
 
-	tls "github.com/vimbing/vutls"
+	tls "github.com/vimbing/utls"
 
 	. "github.com/vimbing/fhttp"
 	"github.com/vimbing/fhttp/httptest"

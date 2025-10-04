@@ -9,7 +9,7 @@ package http2
 // 	"compress/gzip"
 // 	"compress/zlib"
 // 	"context"
-// 	tls "github.com/vimbing/vutls"
+// 	tls "github.com/vimbing/utls"
 // 	"errors"
 // 	"flag"
 // 	"fmt"

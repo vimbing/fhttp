@@ -45,7 +45,7 @@ import (
 	"sync"
 	"time"
 
-	tls "github.com/vimbing/vutls"
+	tls "github.com/vimbing/utls"
 
 	http "github.com/vimbing/fhttp"
 	"github.com/vimbing/fhttp/http2/hpack"

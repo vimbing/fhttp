@@ -18,7 +18,7 @@ import (
 	"strconv"
 	"strings"
 
-	tls "github.com/vimbing/vutls"
+	tls "github.com/vimbing/utls"
 
 	http "github.com/vimbing/fhttp"
 )
